@@ -1,4 +1,4 @@
-# OpenBIM-Components React Integration
+# IFC.JS Viewer
 
 This project integrates OpenBIM-Components into a React application to create a 3D visualization environment for Industry Foundation Classes (IFC) models.
 
@@ -32,7 +32,7 @@ The project uses OpenBIM-Components for handling 3D scene rendering and IFC mode
 
    - npm install
 
-## Usage
+# Usage
 
 ### Start the development server:
 
@@ -42,13 +42,13 @@ The project uses OpenBIM-Components for handling 3D scene rendering and IFC mode
 
 - <TEST-SCRIPT-HERE>
 
-## Project Structure
+# Project Structure
 
 - **src/Components**: Contains React components for setting up the 3D scene and handling IFC models.
 - **public**: Contains IFC sample models and WASM files that are necessary for loading the ifcLoader
 - **App.js**: Main React component that initializes OpenBIM-Components and sets up the 3D scene.
 
-## Libraries Used
+# Libraries Used
 
 - React: A JavaScript library for building user interfaces.
 - OpenBIM-Components: A library for 3D visualization of Industry Foundation Classes (IFC) models.
