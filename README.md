@@ -1,6 +1,6 @@
 # IFC.JS Viewer
 
-This project integrates OpenBIM-Components into a React application to create a 3D visualization environment for Industry Foundation Classes (IFC) models.
+This project integrates OpenBIM-Components into a React application to create a 3D visualization environment for IFC models.
 
 ## Overview
 
@@ -10,9 +10,9 @@ The project uses OpenBIM-Components for handling 3D scene rendering and IFC mode
 
 - **BaseComponents**: Initializes fundamental components for a 3D scene, including a scene, renderer, camera, raycaster, and a simple grid.
 
-- **IFChandler**: Manages the loading and interaction with IFC models. It includes features such as fragment caching, classification, highlighting, and properties rendering.
+- **IFChandler**: Manages the loading and interaction with IFC models. It includes features such as fragment classification, highlighting, and properties rendering.
 
-- **ToolBar**: Creates and configures a toolbar with UI elements for IFC loading, fragment management, properties processing, model tree navigation, and fragment caching.
+- **ToolBar**: Creates and configures a toolbar with UI elements for IFC loading, fragment management, properties processing and model tree navigation
 
 # Getting Started
 
@@ -24,11 +24,11 @@ The project uses OpenBIM-Components for handling 3D scene rendering and IFC mode
 
 1. Clone the repository:
 
-   - git clone <repository-url>
+   - git clone https://github.com/Issa369/IFC-Viewer.git
 
 2. Install dependencies:
 
-   - cd <project-folder>
+   - cd ./IFC-Viewer
 
    - npm install
 
@@ -37,10 +37,6 @@ The project uses OpenBIM-Components for handling 3D scene rendering and IFC mode
 ### Start the development server:
 
 - npm run dev
-
-### Run the test scripts
-
-- <TEST-SCRIPT-HERE>
 
 # Project Structure
 

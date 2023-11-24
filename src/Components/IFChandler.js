@@ -5,22 +5,17 @@ import { ToolBar } from "./ToolBar";
  * IFChandler Function
  *
  * This function handles the initialization and configuration of various OpenBIM-Components
- * to visualize and interact with IFC (Industry Foundation Classes) models.
+ * to visualize and interact with IFC models.
  *
  * @param {Object} components - An object containing references to different components.
  * @param {HTMLElement} container - The HTML container element to which the 3D scene will be appended.
  */
 export const IFChandler = async (components, container) => {
   // Initialize OpenBIM-Components
-  const cacher = new OBC.FragmentCacher(components);
   const classifier = new OBC.FragmentClassifier(components);
   const propertiesProcessor = new OBC.IfcPropertiesProcessor(components);
-
-  // Initialize and set up the model tree
+  const mainToolbar = new OBC.Toolbar(components);
   const modelTree = new OBC.FragmentTree(components);
-  await modelTree.init();
-
-  // Initialize fragments manager and IFC loader
   const fragmentsManager = new OBC.FragmentManager(components);
   const ifcLoader = new OBC.FragmentIfcLoader(components);
 
@@ -36,65 +31,62 @@ export const IFChandler = async (components, container) => {
   components.renderer.postproduction.customEffects.outlineEnabled = true;
   highlighter.outlinesEnabled = true;
 
-  // Event handler when an IFC model is loaded ( gets executed after a successfull file import only )
+  // Event handler when an IFC model is loaded (executed after a successful IFC file import)
   ifcLoader.onIfcLoaded.add(async (model) => {
-    // Process IFC model properties
-    propertiesProcessor.process(model);
+    // Clear existing highlights to prepare for the new model
+    await highlighter.clear();
 
-    // Event handler for rendering properties of the selected fragment
-    highlighter.events.select.onHighlight.add((selection) => {
-      const fragmentID = Object.keys(selection)[0];
-      const expressID = Number([...selection[fragmentID]][0]);
-      propertiesProcessor.renderProperties(model, expressID);
-    });
+    // Dispose of the current model tree UI element to make way for the new one
+    await modelTree.uiElement.dispose();
 
-    // Applies the effects on the highlighter
-    highlighter.update();
+    // Initialize the model tree with the newly added model
+    await modelTree.init();
 
-    // Classifies the rendered model into entities and adds it to the Model Tree
+    // Classify and categorize the loaded model by UUID, storey, and entity
+    classifier.byModel(model.uuid, model);
+    classifier.byStorey(model);
     classifier.byEntity(model);
-    modelTree.update(["entities"]);
 
-    // Caches the loaded IFC file
-    cacher.saveFragmentGroup(model);
-  });
+    // Update the model tree with the new classification data
+    modelTree.update(["model", "storeys", "entities"]);
 
-  // Event handler when fragments are loaded ( gets executed after a page reload only )
-  fragmentsManager.onFragmentsLoaded.add(async (models) => {
-    // Event handler for rendering properties of the selected fragment
-    highlighter.events.select.onHighlight.add((selection) => {
-      const fragmentID = Object.keys(selection)[0];
-      const expressID = Number([...selection[fragmentID]][0]);
-      let model;
-      for (const group of fragmentsManager.groups) {
-        const foundFragment = Object.values(group.keyFragments).find(
-          (id) => id === fragmentID
-        );
+    // Add the model tree UI element to the main toolbar
+    mainToolbar.addChild(modelTree.uiElement.get("main"));
 
-        if (foundFragment) model = group;
-      }
-
-      // Processes and renders the selected fragment
-      propertiesProcessor.process(model);
-      propertiesProcessor.renderProperties(model, expressID);
-    });
-
-    // Applies the effects on the highlighter
+    // Update the highlighter to trigger the customer effects
     highlighter.update();
-
-    // Classifies the rendered model into entities and adds it to the Model Tree
-    classifier.byEntity(models);
-    modelTree.update(["entities"]);
   });
-
-  // Check if a fragment group exists and renders it if it does
-  const fragments_id = cacher.fragmentsIDs;
-  cacher.existsFragmentGroup(fragments_id) &&
-    cacher.getFragmentGroup(fragments_id);
 
   // Event handler for model tree selection
-  modelTree.onSelected.add((filter) => {
+  modelTree.onSelected.add(async (filter) => {
     highlighter.highlightByID("select", filter, true, true);
+  });
+
+  highlighter.events.select.onHighlight.add((selection) => {
+    // When an item is highlighted, retrieve its fragment and express ID
+    const fragmentID = Object.keys(selection)[0];
+    const expressID = Number([...selection[fragmentID]][0]);
+
+    let model;
+
+    // Find the model associated with the highlighted fragment
+    for (const group of fragmentsManager.groups) {
+      const fragmentFound = Object.values(group.keyFragments).find(
+        (id) => id === fragmentID
+      );
+
+      if (fragmentFound) model = group;
+    }
+
+    // Process and render properties for the selected fragment
+    propertiesProcessor.process(model);
+    propertiesProcessor.renderProperties(model, expressID);
+  });
+
+  // Event handler for clearing selection highlights
+  highlighter.events.select.onClear.add(() => {
+    // When the selection is cleared, clean up the displayed properties
+    propertiesProcessor.cleanPropertiesList();
   });
 
   // Event handler for handling double-click highlighting
@@ -115,7 +107,6 @@ export const IFChandler = async (components, container) => {
     ifcLoader,
     fragmentsManager,
     propertiesProcessor,
-    modelTree,
-    cacher
+    mainToolbar
   );
 };
