@@ -1,4 +1,4 @@
-# IFC.JS Viewer
+# IFC.JS Viewer Application
 
 This project integrates OpenBIM-Components into a React application to create a 3D visualization environment for IFC models.
 
@@ -8,11 +8,11 @@ The project uses OpenBIM-Components for handling 3D scene rendering and IFC mode
 
 ## Features
 
-- **BaseComponents**: Initializes fundamental components for a 3D scene, including a scene, renderer, camera, raycaster, and a simple grid.
-
-- **IFChandler**: Manages the loading and interaction with IFC models. It includes features such as fragment classification, highlighting, and properties rendering.
-
-- **ToolBar**: Creates and configures a toolbar with UI elements for IFC loading, fragment management, properties processing and model tree navigation
+- **3D Model Visualization:** Display IFC models in a 3D scene using the my custom Open BIM Components library.
+- **Model Hierarchy Tree:** Explore the hierarchical structure of the model through a tree view.
+- **Entity Highlighting:** Click on tree items to highlight corresponding entities in the 3D scene.
+- **Double-Click Zoom:** Double-click on a specific entity to zoom in on and focus the camera on that element.
+- **File Import:** Import IFC files to load models into the application.
 
 # Getting Started
 
@@ -38,13 +38,40 @@ The project uses OpenBIM-Components for handling 3D scene rendering and IFC mode
 
 - npm run dev
 
-# Project Structure
+### basic Usage
 
-- **src/Components**: Contains React components for setting up the 3D scene and handling IFC models.
-- **public**: Contains IFC sample models and WASM files that are necessary for loading the ifcLoader
-- **App.js**: Main React component that initializes OpenBIM-Components and sets up the 3D scene.
+- Launch the application, and you will be greeted with the IFC Viewer interface.
+- Use the "Import File" button to load an IFC file and visualize the model.
+- Explore the model hierarchy in the sidebar by expanding tree nodes.
+- Click on tree items to highlight corresponding entities in the 3D scene.
+- Double-click on a specific entity to zoom in and focus the camera on that element.
+
+# Components
+
+### ComponentsProvider
+
+The ComponentsProvider component initializes the Open BIM Components library and provides a context for other components to access the OBC.Components instance.
+
+### Main
+
+The Main component serves as the main container for the IFC Viewer application. It manages the state of the model tree and initializes the 3D scene using the BaseComponents function.
+
+### SideTree
+
+The SideTree component displays a hierarchical tree view of the model entities. It allows users to navigate the model hierarchy and highlights the corresponding 3D mesh when a tree leaf is clicked.
 
 # Libraries Used
 
-- React: A JavaScript library for building user interfaces.
-- OpenBIM-Components: A library for 3D visualization of Industry Foundation Classes (IFC) models.
+The IFC Viewer application utilizes the following key libraries:
+
+- **React:** A JavaScript library for building user interfaces.
+- **Mui:** A simple, customizable, and accessible library of React components.
+- **Open BIM Components:** The OpenBIM-Components library has been cloned and extended with custom features, allowing the application to seamlessly integrate and interact with (IFC) models within a web-based environment.
+
+# Future Development
+
+Opportunities for future development and improvement include:
+
+- **Enhanced Element Information:** Present additional details about selected entities to provide users with a more comprehensive understanding.
+
+- **Model Deletion:** Implement a delete button functionality to streamline the removal of loaded models, contributing to a more efficient and organized user experience.
